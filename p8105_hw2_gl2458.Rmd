@@ -1,0 +1,60 @@
+---
+title: 'Homework #2'
+author: "Rachel Lee"
+date: "10/4/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#load libraries
+```{r}
+library(tidyverse)
+library(tidyr)
+library(readxl)
+```
+
+
+#Problem 1
+
+```{r p1_import_clean}
+trashwheel = read_excel("./Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+                        sheet = 1, 
+                        range = "A2:N408") %>% 
+  janitor::clean_names() %>%
+  select(-dumpster) %>%
+  mutate(sports_balls = as.integer(round(sports_balls))) %>% 
+  rename("weight" = weight_tons, "volume" = volume_cubic_yards) #rename columns to cleaner variable names
+```
+
+weight_tons and volume_cubic_yards were renamed to weight and volume respectively. It is not necessary to include units in variable names. 
+Import and clean precipitation data from 2017 and 2018 
+
+
+## Precipitation Dataset
+The following code trunk reads and cleans precipitation data for 2017 and 2018. For each, omit rows without precipitation data and add a variable year. Next, combine precipitation datasets and convert month to a character variable. 
+
+```{r p1_dataimport_prcp}
+prcp_2017 = 
+    read_excel("./Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = '2017 Precipitation', range = "A2:B14") %>%
+    janitor::clean_names() %>% 
+    drop_na(total) %>% #delete rows that do not contain precipitation data
+    mutate(year = 2017)
+    
+prcp_2018 = 
+    read_excel("./Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = '2018 Precipitation', range = "A2:B14") %>%
+    janitor::clean_names() %>% 
+    drop_na(total) %>%  #delete rows that do not contain precipitation data
+    mutate(year = 2018)
+
+# Combine datasets for years 2017 and 2018
+prcp = bind_rows(prcp_2017, prcp_2018) %>% 
+    mutate(month = month.name[month]) %>% 
+    select(year, month, total)
+
+# Confirm the combined dataset
+head(prcp)
+tail(prcp)
+```
