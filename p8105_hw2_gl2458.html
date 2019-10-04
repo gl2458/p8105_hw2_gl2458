@@ -369,7 +369,8 @@ summary {
 </div>
 
 
-<p>#load libraries</p>
+<div id="load-libraries" class="section level1">
+<h1>load libraries</h1>
 <pre class="r"><code>library(tidyverse)</code></pre>
 <pre><code>## -- Attaching packages -------------------------------------------------------------------- tidyverse 1.2.1 --</code></pre>
 <pre><code>## v ggplot2 3.2.1     v purrr   0.3.2
@@ -381,7 +382,9 @@ summary {
 ## x dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(tidyr)
 library(readxl)</code></pre>
-<p>#Problem 1</p>
+</div>
+<div id="problem-1" class="section level1">
+<h1>Problem 1</h1>
 <pre class="r"><code>trashwheel = read_excel(&quot;./Trash-Wheel-Collection-Totals-8-6-19.xlsx&quot;,
                         sheet = 1, 
                         range = &quot;A2:N408&quot;) %&gt;% 
@@ -431,6 +434,7 @@ head(prcp)</code></pre>
 ## 4  2018 October    2.12
 ## 5  2018 November   7.82
 ## 6  2018 December   6.11</code></pre>
+</div>
 </div>
 <div id="interpretation" class="section level1">
 <h1>Interpretation</h1>
@@ -515,8 +519,13 @@ Final = polls%&gt;%
              by = c(&quot;year&quot;, &quot;month&quot;))%&gt;%
   left_join( unemployment,
              by = c(&quot;year&quot;, &quot;month&quot;))</code></pre>
-<p>#Interpretation In the polls data set, there are 822 observations. In the snp data set, there are 787 observations. In the unemployment data set, there are 816 observations. In the Final combined dataset, there are 12 observations. Years range from 1947 to 2015.</p>
-<p>#Problem 3</p>
+</div>
+<div id="interpretation-1" class="section level1">
+<h1>Interpretation</h1>
+<p>In the polls data set, there are 822 observations. In the snp data set, there are 787 observations. In the unemployment data set, there are 816 observations. In the Final combined dataset, there are 12 observations. Years range from 1947 to 2015.</p>
+</div>
+<div id="problem-3" class="section level1">
+<h1>Problem 3</h1>
 <pre class="r"><code>popular_names = read_csv(file=&quot;./Popular_Baby_Names.csv&quot;)%&gt;%
   janitor::clean_names()%&gt;%
   mutate(ethnicity = recode(ethnicity, &quot;ASIAN AND PACI&quot; = &quot;ASIAN AND PACIFIC ISLANDER&quot;, &quot;BLACK NON HISP&quot; = &quot;BLACK NON HISPANIC&quot;, &quot;WHITE NON HISP&quot; = &quot;WHITE NON HISPANIC&quot;))%&gt;%

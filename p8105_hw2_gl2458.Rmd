@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#load libraries
+# load libraries
 ```{r}
 library(tidyverse)
 library(tidyr)
@@ -17,7 +17,7 @@ library(readxl)
 ```
 
 
-#Problem 1
+# Problem 1
 
 ```{r p1_import_clean}
 trashwheel = read_excel("./Trash-Wheel-Collection-Totals-8-6-19.xlsx",
@@ -110,11 +110,11 @@ Final = polls%>%
              by = c("year", "month"))
 ```
 
-#Interpretation
+# Interpretation
 In the polls data set, there are `r nrow(polls)` observations. In the snp data set, there are `r nrow(snp)` observations. In the unemployment data set, there are `r nrow(unemployment)` observations. In the Final combined dataset, there are `r ncol(Final)` observations. Years range from `r min(pull(polls, year))` to `r max(pull(polls, year))`. 
 
 
-#Problem 3
+# Problem 3
 
 ```{r}
 popular_names = read_csv(file="./Popular_Baby_Names.csv")%>%
