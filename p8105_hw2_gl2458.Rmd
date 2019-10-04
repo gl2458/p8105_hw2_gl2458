@@ -58,3 +58,95 @@ prcp = bind_rows(prcp_2017, prcp_2018) %>%
 head(prcp)
 tail(prcp)
 ```
+# Interpretation
+In the Mr.Trash Wheel dataset, there are `r nrow(trashwheel)` observations and `r ncol(trashwheel)` variables. Key variables of the Mr. Trash Wheel dataset are  `colnames(trashwheel)`. In the precipitation datatset, there are `r nrow(prcp)` observations and `r ncol(prcp)` variables. Key variable of the precipitation dataset is `total` which is the precipitation volume for each month. `r sum(filter(prcp_2017, year == 2017)$total)` was the total precipitation in 2017. Median number of sports balls in 2018 was `r median(filter(trashwheel, year == 2018)$sports_balls)`.
+
+# Problem 2
+
+```{r p2_import_clean}
+
+# cleaning polls dataset
+
+polls = read_csv(file = "./pols-month.csv")%>%
+  separate(mon, c("year", "month", "day"), 
+           convert = TRUE)%>%
+  mutate (month = month.name[month])%>%
+  mutate(prez_dem = recode (prez_dem, '1' = "dem")) %>% 
+  mutate(prez_gop = recode (prez_gop, '1' = "gop", '2' = "gop")) %>% 
+  pivot_longer(
+    cols = c("prez_dem", "prez_gop"), 
+    values_to = "president", 
+    values_drop_na = TRUE
+  ) %>% 
+  select(-day, -name)
+
+# clean the snp dataset
+
+snp = read_csv(file = "./snp.csv")%>%
+    separate(date, c("year", "month", "day"), 
+             convert = TRUE)%>%
+   mutate (month = month.name[month])%>%
+  select(year, month, -day, everything())
+
+# clean and transform the unemployment data
+
+unemployment = read_csv("./unemployment.csv") %>%
+  pivot_longer(Jan:Dec, 
+    names_to = "month",
+    values_to = "rate"
+  ) %>% 
+  mutate(month = match(month, month.abb)) %>%
+  mutate(month = month.name[month]) %>%
+  mutate(Year = as.integer(Year)) %>%
+  janitor::clean_names()
+
+
+#combine data sets -> create one dataset with polls, snp and unemployent rate
+
+Final = polls%>%
+  left_join( snp,
+             by = c("year", "month"))%>%
+  left_join( unemployment,
+             by = c("year", "month"))
+```
+
+#Interpretation
+In the polls data set, there are `r nrow(polls)` observations. In the snp data set, there are `r nrow(snp)` observations. In the unemployment data set, there are `r nrow(unemployment)` observations. In the Final combined dataset, there are `r ncol(Final)` observations. Years range from `r min(pull(polls, year))` to `r max(pull(polls, year))`. 
+
+
+#Problem 3
+
+```{r}
+popular_names = read_csv(file="./Popular_Baby_Names.csv")%>%
+  janitor::clean_names()%>%
+  mutate(ethnicity = recode(ethnicity, "ASIAN AND PACI" = "ASIAN AND PACIFIC ISLANDER", "BLACK NON HISP" = "BLACK NON HISPANIC", "WHITE NON HISP" = "WHITE NON HISPANIC"))%>%
+  mutate(childs_first_name = str_to_lower(childs_first_name))%>%
+  distinct()
+popular_names %>%
+  filter(childs_first_name == "olivia")%>%
+  select(-count)%>%
+  pivot_wider(
+    names_from = "year_of_birth",
+    values_from = "rank")
+popular_names %>%
+  filter(gender == "male")%>%
+  filter(rank == 1)%>%
+  select(-count)%>%
+  pivot_wider(
+    names_from = "year_of_birth",
+    values_from = "childs_first_name"
+  )
+popular_names %>%
+  filter(gender == "MALE",
+         ethnicity == "WHITE NON HISPANIC",
+         year_of_birth == 2016)%>%
+  ggplot(aes(x=rank, y=count)) + 
+  geom_point(colour = "purple") +
+  labs(
+    title = "Popular White-non Hispanic Male Names and Ranks ",
+    x = "Popularity Ranking",
+    y = "Count"
+  )
+  
+```
+
